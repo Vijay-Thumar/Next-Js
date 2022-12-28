@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     async function getPokemon() {
-      const resp = await fetch("https://jherr-pokemon.s3.us-west-1.amazonaws.com/index.json")
+      const resp = await fetch("https://pokemon-data-set.vercel.app/index.json")
       setPokemon(await resp.json());
     }
     getPokemon();
