@@ -6,16 +6,25 @@ import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
-  const [pokemon, setPokemon] = useState([]);
-
-  useEffect(() => {
-    async function getPokemon() {
-      const resp = await fetch("https://jherr-pokemon.s3.us-west-1.amazonaws.com/index.json")
-      setPokemon(await resp.json());
+export async function getServerSideProps() {
+  const resp = await fetch('https://pokemon-data-set.vercel.app/index.json')
+  return {
+    props: {
+      pokemon: await resp.json(),
     }
-    getPokemon();
-  }, [])
+  }
+}
+
+export default function Home({ pokemon }: { pokemon: any }) {
+  // const [pokemon, setPokemon] = useState([]);
+
+  // useEffect(() => {
+  //   async function getPokemon() {
+  //     const resp = await fetch("https://pokemon-data-set.vercel.app/index.json")
+  //     setPokemon(await resp.json());
+  //   }
+  //   getPokemon();
+  // }, [])
 
   return (
     <>
@@ -27,7 +36,7 @@ export default function Home() {
         {pokemon.map((item: { id: number; name: string; image: string; }) => (
           <div className={styles.card} key={item.id}>
             <Link href={`/pokemon/${item.id}`}>
-              <img src={`https://jherr-pokemon.s3.us-west-1.amazonaws.com/${item.image}`} alt={item.name} />
+              <img src={`https://pokemon-data-set.vercel.app/${item.image}`} alt={item.name} />
               <h3 className={styles.h3style}>{item.name}</h3>
             </Link>
           </div>

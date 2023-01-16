@@ -14,21 +14,31 @@ export interface SpecificPokemon {
     stats: { name: string, value: number }[]
 }
 
-export default function Details() {
-    const { query: { id } } = useRouter(); // taken query from useRouter and 
-    const [pokemon, setPokemon] = useState<SpecificPokemon | null>(null);
+export async function getServerSideProps({ params }: { params: { id: string | number } }) {
+    const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${params.id}.json`)
 
-    useEffect(() => {
-        async function getPokemon() {
-            const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${id}.json`)
-            setPokemon(await resp.json());
+    return {
+        props: {
+            pokemon: await resp.json(),
         }
-        if (id) {
-            console.log('getting pokemon.');
+    }
+}
 
-            getPokemon();
-        }
-    }, [id])
+export default function Details({pokemon}:{pokemon:any}) {
+    // const { query: { id } } = useRouter(); // taken query from useRouter and 
+    // const [pokemon, setPokemon] = useState<SpecificPokemon | null>(null);
+
+    // useEffect(() => {
+    //     async function getPokemon() {
+    //         const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${id}.json`)
+    //         setPokemon(await resp.json());
+    //     }
+    //     if (id) {
+    //         console.log('getting pokemon.');
+
+    //         getPokemon();
+    //     }
+    // }, [id])
 
     if (!pokemon) {
         return null;
@@ -67,7 +77,7 @@ export default function Details() {
                             </tr>
                         </thead>
                         <tbody>
-                            {pokemon.stats.map(({ name, value }) => (
+                            {pokemon.stats.map(({ name, value }:any) => (
                                 <tr key={name}>
                                     <td className={styles.attribute}>{name}</td>
                                     <td>{value}</td>
