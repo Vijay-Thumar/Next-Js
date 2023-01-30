@@ -27,7 +27,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }: { params: { id: string | number } }) {
-    const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${params.id}.json`)
+    const resp = await fetch(`https://pokemon-data-set.vercel.app/pokemon/${params.id}.json`)
 
     return {
         props: {
