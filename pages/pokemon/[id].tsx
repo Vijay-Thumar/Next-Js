@@ -14,7 +14,19 @@ export interface SpecificPokemon {
     stats: { name: string, value: number }[]
 }
 
-export async function getServerSideProps({ params }: { params: { id: string | number } }) {
+export async function getStaticPaths() {
+    const resp = await fetch('https://pokemon-data-set.vercel.app/index.json')
+    const pokemon = await resp.json()
+
+    return {
+        paths: pokemon.map((pokemon: {id: number}) => ({
+            params: { id: pokemon.id.toString() }
+        })),
+        fallback: false,
+    }
+}
+
+export async function getStaticProps({ params }: { params: { id: string | number } }) {
     const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${params.id}.json`)
 
     return {
@@ -24,7 +36,7 @@ export async function getServerSideProps({ params }: { params: { id: string | nu
     }
 }
 
-export default function Details({pokemon}:{pokemon:any}) {
+export default function Details({ pokemon }: { pokemon: any }) {
     // const { query: { id } } = useRouter(); // taken query from useRouter and 
     // const [pokemon, setPokemon] = useState<SpecificPokemon | null>(null);
 
@@ -77,7 +89,7 @@ export default function Details({pokemon}:{pokemon:any}) {
                             </tr>
                         </thead>
                         <tbody>
-                            {pokemon.stats.map(({ name, value }:any) => (
+                            {pokemon.stats.map(({ name, value }: any) => (
                                 <tr key={name}>
                                     <td className={styles.attribute}>{name}</td>
                                     <td>{value}</td>

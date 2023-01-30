@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const resp = await fetch('https://pokemon-data-set.vercel.app/index.json')
   return {
     props: {
